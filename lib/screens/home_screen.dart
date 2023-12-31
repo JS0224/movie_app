@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
             ),
             const TitleText(text: 'Now in Cinemas'),
             SizedBox(
-              height: 150,
+              height: 280,
               child: FutureBuilder(
                 future: cinemaMovies,
                 builder: (context, snapshot) {
@@ -133,27 +133,52 @@ ListView makeMovieWithTitleList(List<MovieModel> movieModelData) {
   return ListView.separated(
     itemBuilder: (context, index) {
       var data = movieModelData[index];
-      return Container(
-        width: 150,
-        height: 150,
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 5,
-              offset: const Offset(-5, 5),
-              color: Colors.black
-                  .withOpacity(0.3), // changes the position of the shadow
+      return Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          // Background
+          Container(
+            width: 150,
+            height: 150, // Adjust height as needed
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 5,
+                  offset: const Offset(-5, 5),
+                  color: Colors.black.withOpacity(0.3),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Image.network(baseUrl + data.imageSrc,
-            width: double
-                .infinity, // Make sure the image takes the full width of the container
-            height: double
-                .infinity, // Make sure the image takes the full height of the container
-            fit: BoxFit.cover),
+            child: Image.network(
+              baseUrl + data.imageSrc,
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          Positioned(
+            top: 155,
+            child: SizedBox(
+              width: 150,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  data.title,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow
+                      .ellipsis, // Allows text to overflow its container
+                  maxLines: 3,
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     },
     separatorBuilder: (context, index) => const SizedBox(
@@ -161,6 +186,5 @@ ListView makeMovieWithTitleList(List<MovieModel> movieModelData) {
     ),
     itemCount: movieModelData.length,
     scrollDirection: Axis.horizontal,
-    // padding: EdgeInsets.,
   );
 }
