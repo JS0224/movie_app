@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:challenge_toon/screens/home_screen.dart';
 
 void main() {
@@ -11,7 +12,30 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(),
+      theme: ThemeData(
+        textTheme: TextTheme(
+          titleLarge: GoogleFonts.hammersmithOne(
+            fontSize: 28,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            textBaseline: TextBaseline.ideographic,
+          ),
+          titleMedium: GoogleFonts.notoSans(
+            fontSize: 26,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+          bodyMedium: GoogleFonts.notoSans(
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
+            color: Colors.white70,
+          ),
+          displayLarge: const TextStyle(
+              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.blue),
+          displaySmall: const TextStyle(fontSize: 15, color: Colors.white60),
+        ),
+      ),
+      home: const HomeScreen(),
     );
   }
 }
