@@ -1,5 +1,6 @@
 import 'package:challenge_toon/models/movie_detail_model.dart';
 import 'package:challenge_toon/services/api_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
@@ -21,19 +22,26 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   final String baseUrl = 'https://image.tmdb.org/t/p/w500/';
   late Future<MovieDetailModel> movie;
+  late SharedPreferences prefs;
+  bool isLiked = false;
+  final String likedMoviesString = 'likedMovies';
 
   @override
   void initState() {
     super.initState();
 
     movie = ApiService.getMovieDetail(widget.id);
+    initPrefs();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: const DetailScreenAppBar(),
+      appBar: DetailScreenAppBar(
+        isLiked: isLiked,
+        onHeartTap: onHeartTap,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,6 +100,34 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
+  Future initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    var likedMovies = prefs.getStringList(likedMoviesString);
+    if (likedMovies != null) {
+      if (likedMovies.contains(widget.id.toString())) {
+        setState(() {
+          isLiked = true;
+        });
+      }
+    } else {
+      await prefs.setStringList(likedMoviesString, []);
+    }
+  }
+
+  onHeartTap() async {
+    final likedMovies = prefs.getStringList(likedMoviesString);
+    assert(likedMovies != null);
+    isLiked = !isLiked;
+    if (isLiked) {
+      likedMovies?.add(widget.id.toString());
+    } else {
+      likedMovies?.remove(widget.id.toString());
+    }
+
+    await prefs.setStringList(likedMoviesString, likedMovies!);
+    setState(() {});
+  }
+
   Widget buildRatingStars(num rating) {
     final double changedRating = rating.toInt() / 2;
     final int numberOfFullStars = changedRating.toInt();
@@ -146,8 +182,13 @@ class _DetailScreenState extends State<DetailScreen> {
 
 class DetailScreenAppBar extends StatelessWidget
     implements PreferredSizeWidget {
+  final VoidCallback onHeartTap;
+  final bool isLiked;
+
   const DetailScreenAppBar({
     super.key,
+    required this.onHeartTap,
+    required this.isLiked,
   });
 
   @override
@@ -175,6 +216,15 @@ class DetailScreenAppBar extends StatelessWidget
           Navigator.of(context).pop();
         },
       ),
+      actions: [
+        IconButton(
+          icon: Icon(
+            isLiked ? Icons.favorite : Icons.favorite_border,
+            color: Colors.red,
+          ),
+          onPressed: onHeartTap,
+        ),
+      ],
     );
   }
 

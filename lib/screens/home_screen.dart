@@ -72,9 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Center(
                     child: Text(
                       "End of the content",
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
+                      style: TextStyle(fontSize: 15, color: Colors.black),
                     ),
                   ),
                 ),
