@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:challenge_toon/models/movie_detail_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:challenge_toon/models/movie_model.dart';
 
@@ -20,6 +21,19 @@ class ApiService {
 
   static Future<List<MovieModel>> getUpcomingMovies() async {
     return common(upcoming);
+  }
+
+  static Future<MovieDetailModel> getMovieDetail(num movieId) async {
+    final movieIdUrl = "movie?id=$movieId";
+    final url = Uri.parse('$baseUrl/$movieIdUrl');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      return MovieDetailModel.fromJson(result);
+    }
+
+    throw Error();
   }
 
   static Future<List<MovieModel>> common(String keyword) async {

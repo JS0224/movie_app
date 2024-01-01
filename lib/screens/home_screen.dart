@@ -148,7 +148,10 @@ ListView makePopularMovieList(List<MovieModel> movieModelData) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailScreen(movie: data),
+              builder: (context) => DetailScreen(
+                id: data.id,
+                imageSrc: data.imageSrc,
+              ),
             ),
           ),
         },

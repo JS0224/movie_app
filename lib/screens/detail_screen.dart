@@ -1,11 +1,18 @@
+import 'package:challenge_toon/models/movie_detail_model.dart';
 import 'package:challenge_toon/models/movie_model.dart';
+import 'package:challenge_toon/services/api_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
 class DetailScreen extends StatefulWidget {
-  final MovieModel movie;
+  final num id;
+  final String imageSrc;
 
-  const DetailScreen({super.key, required this.movie});
+  const DetailScreen({
+    super.key,
+    required this.id,
+    required this.imageSrc,
+  });
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -13,11 +20,14 @@ class DetailScreen extends StatefulWidget {
 
 // DetailScreenState
 class _DetailScreenState extends State<DetailScreen> {
-  final baseUrl = "https://image.tmdb.org/t/p/w500";
+  final String baseUrl = 'https://image.tmdb.org/t/p/w500/';
+  late Future<MovieDetailModel> movie;
 
   @override
   void initState() {
     super.initState();
+
+    movie = ApiService.getMovieDetail(widget.id);
   }
 
   @override
@@ -29,57 +39,70 @@ class _DetailScreenState extends State<DetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.network(
-            baseUrl + widget.movie.imageSrc,
+            baseUrl + widget.imageSrc,
             fit: BoxFit.cover,
             height: MediaQuery.of(context).size.width * 0.6,
           ),
-          Padding(
-            padding: const EdgeInsets.all(
-              15,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.movie.title,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
+          FutureBuilder(
+            future: movie,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Padding(
+                  padding: const EdgeInsets.all(
+                    15,
                   ),
-                  child: buildRatingStars(widget.movie.rating),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 15,
-                  ),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.movie.genres.toString(),
-                        style: Theme.of(context).textTheme.displaySmall,
+                        snapshot.data!.title,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      Text("  |  ",
-                          style: Theme.of(context).textTheme.displaySmall),
-                      widget.movie.isAdult
-                          ? Text("Adults Only",
-                              style: Theme.of(context).textTheme.displaySmall)
-                          : Text("Kids",
-                              style: Theme.of(context).textTheme.displaySmall),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                        ),
+                        child: buildRatingStars(snapshot.data!.rating),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              snapshot.data!.genres.toString(),
+                              style: Theme.of(context).textTheme.displaySmall,
+                            ),
+                            Text("  |  ",
+                                style:
+                                    Theme.of(context).textTheme.displaySmall),
+                            snapshot.data!.isAdult
+                                ? Text("Adults Only",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall)
+                                : Text("Kids",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        "Overview",
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        snapshot.data!.overview,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )
                     ],
                   ),
-                ),
-                Text(
-                  "Overview",
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Text(
-                  widget.movie.overview,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                )
-              ],
-            ),
+                );
+              }
+              return Container();
+            },
           ),
         ],
       ),
