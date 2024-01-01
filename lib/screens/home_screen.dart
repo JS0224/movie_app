@@ -67,9 +67,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 upcomingMovies,
                 makeMovieWithTitleList,
               ),
-              isEndOfScroll
-                  ? const Text("End of the content")
-                  : const CircularProgressIndicator(),
+              if (isEndOfScroll)
+                const Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Center(
+                    child: Text(
+                      "End of the content",
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
