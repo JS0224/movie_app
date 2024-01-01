@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:challenge_toon/models/movie_model.dart';
@@ -194,52 +193,66 @@ ListView makeMovieWithTitleList(List<MovieModel> movieModelData) {
   return ListView.separated(
     itemBuilder: (context, index) {
       var data = movieModelData[index];
-      return Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          // Background
-          Container(
-            width: 150,
-            height: 150, // Adjust height as needed
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 5,
-                  offset: const Offset(-5, 5),
-                  color: Colors.black.withOpacity(0.3),
-                ),
-              ],
+      return GestureDetector(
+        onTap: () => {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailScreen(
+                id: data.id,
+                imageSrc: data.imageSrc,
+              ),
             ),
-            child: Image.network(
-              baseUrl + data.imageSrc,
-              width: double.infinity,
-              height: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-
-          Positioned(
-            top: 155,
-            child: SizedBox(
+          )
+        },
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            // Background
+            Container(
               width: 150,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  data.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
+              height: 250, // Adjust height as needed
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 5,
+                    offset: const Offset(-5, 5),
+                    color: Colors.black.withOpacity(0.3),
                   ),
-                  overflow: TextOverflow
-                      .ellipsis, // Allows text to overflow its container
-                  maxLines: 3,
+                ],
+              ),
+              child: Image.network(
+                baseUrl + data.imageSrc,
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            Positioned(
+              bottom: 0,
+              child: SizedBox(
+                width: 150,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    data.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                    overflow: TextOverflow
+                        .ellipsis, // Allows text to overflow its container
+                    maxLines: 3,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     },
     separatorBuilder: (context, index) => const SizedBox(
