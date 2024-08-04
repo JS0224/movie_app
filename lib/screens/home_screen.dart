@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Future<List<MovieModel>> upcomingMovies =
       ApiService.getUpcomingMovies();
 
+
   final ScrollController _scrollController = ScrollController();
   var isEndOfScroll = false;
 

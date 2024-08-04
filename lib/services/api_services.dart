@@ -7,7 +7,7 @@ import 'package:challenge_toon/models/movie_model.dart';
 class ApiService {
   static const String baseUrl = "https://movies-api.nomadcoders.workers.dev";
   static const String popular = "popular";
-  static const String cinema = "cinema";
+  static const String cinema = "now-playing";
   static const String upcoming = "coming-soon";
 
   static Future<List<MovieModel>> getPopularMovies() async {
@@ -15,8 +15,7 @@ class ApiService {
   }
 
   static Future<List<MovieModel>> getCinemaMovies() async {
-    return common(upcoming);
-    // fixme: return common(cinema);
+    return common(cinema);
   }
 
   static Future<List<MovieModel>> getUpcomingMovies() async {
