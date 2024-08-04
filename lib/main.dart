@@ -1,3 +1,4 @@
+import 'package:challenge_toon/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:challenge_toon/screens/home_screen.dart';
@@ -35,7 +36,7 @@ class App extends StatelessWidget {
           displaySmall: const TextStyle(fontSize: 15, color: Colors.white60),
         ),
       ),
-      home: const HomeScreen(),
+      home: const RegisterScreen() //const HomeScreen(),
     );
   }
 }
